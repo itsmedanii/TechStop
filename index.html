@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechStop | Innovación para tu vida</title>
+    <style>
+     
+        /* =========================================
+           1. RESET & LOCAL FONTS
+           ========================================= */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            scroll-behavior: smooth;
+        }
+
+        /* Glacial Indifference (Local) */
+        @font-face {
+            font-family: 'Glacial Indifference';
+            src: url('GlacialIndifference-Regular.otf') format('opentype'); 
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* Poppins Regular (Local) */
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Poppins Regular'), url('Poppins-Regular.woff') format('woff');
+        }
+
+        /* Poppins SemiBold (Local) */
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 600;
+            src: local('Poppins SemiBold'), url('Poppins-SemiBold.woff') format('woff');
+        }
+
+        /* Poppins Bold (Local) */
+        @font-face {
+            font-family: 'Poppins';
+            font-style: normal;
+            font-weight: 700;
+            src: local('Poppins Bold'), url('Poppins-Bold.woff') format('woff');
+        }
+
+        /* Poppins Bold Italic (Local - Matching your Logo) */
+        @font-face {
+            font-family: 'Poppins';
+            font-style: italic;
+            font-weight: 700;
+            src: local('Poppins Bold Italic'), url('Poppins-BoldItalic.woff') format('woff');
+        }
+
+        h1, h2, h3, .price, .btn-buy, .nav-links a {
+            font-family: 'Poppins', sans-serif; 
+        
+        }
+
+        body {
+            font-family: 'Glacial Indifference', Arial, sans-serif; 
+            background-color: #f4f6f8;
+            color: #333;
+            line-height: 1.6;
+        }
+
+       /* =========================================
+           2. NAVIGATION BAR (UPDATED FOR LOGO CONTRAST)
+           ========================================= */
+        header {
+            background-color: #ffffff; /* Changed to white so the logo pops */
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo img {
+            height: 70px;
+            display: block;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-links li {
+            position: relative; /* Needed for dropdown positioning */
+        }
+
+        .nav-links a {
+            color: #2E4365; /* Changed text to your brand's dark blue */
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #E27C31; /* Brand orange on hover */
+        }
+
+        /* Dropdown CSS */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #ffffff;
+            min-width: 220px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            z-index: 1001;
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            text-transform: none;
+            font-weight: 400;
+            font-family: 'Glacial Indifference', sans-serif;
+            border-bottom: 1px solid #f4f6f8;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f8fafd;
+            color: #E27C31;
+            padding-left: 20px; /* Cool hover slide effect */
+            transition: all 0.3s ease;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Cart Icon */
+        .cart-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: #2E4365; 
+            transition: fill 0.3s ease;
+        }
+
+        .cart-icon:hover svg {
+            fill: #E27C31; 
+        }
+        /* =========================================
+           3. TALL BANNER SLIDER
+           ========================================= */
+        .slider-container {
+            width: 100%;
+            height: 65vh;
+            position: relative;
+            overflow: hidden;
+            background-color: #1a2538;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(46, 67, 101, 0.4); 
+            z-index: 1;
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            padding: 0 20px;
+        }
+
+        .slide h1 {
+            font-size: 3.5rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            margin-bottom: 15px;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        /* =========================================
+           4. PRODUCT CATALOG
+           ========================================= */
+        #products {
+            padding: 80px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: #2E4365;
+            margin-bottom: 50px;
+        }
+
+        .product-card {
+            background: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            display: flex;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 40%;
+            background-color: #28628B; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 40px;
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .product-info h2 {
+            color: #2E4365;
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .product-info p {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #2E4365;
+            margin-bottom: 25px;
+        }
+
+        .btn-buy {
+            background-color: #E27C31;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            text-align: center;
+            width: fit-content;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-buy:hover {
+            background-color: #c96b28;
+        }
+
+        /* =========================================
+           5. VALUE PROPOSITION / TRUST SECTION
+           ========================================= */
+        .trust-section {
+            background-color: #ffffff;
+            padding: 60px 20px;
+            border-top: 1px solid #eaeaea;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .trust-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            text-align: center;
+        }
+
+        .trust-item {
+            padding: 20px;
+        }
+
+        .trust-icon {
+            font-size: 3rem;
+            color: #E27C31;
+            margin-bottom: 15px;
+        }
+
+        .trust-item h3 {
+            color: #2E4365;
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .trust-item p {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* =========================================
+           6. FOOTER
+           ========================================= */
+        footer {
+            background-color: #1a2538;
+            color: #8892a3;
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 1rem;
+        }
+
+        /* =========================================
+           7. FLOATING WHATSAPP BUTTON & MASCOT
+           ========================================= */
+        .floating-wa-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .mascot-helper {
+            width: 80px;
+            margin-bottom: -15px;
+            z-index: 1001;
+            pointer-events: none;
+            animation: gentleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes gentleFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            z-index: 1000;
+        }
+
+        .btn-whatsapp:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-whatsapp svg {
+            width: 35px;
+            height: 35px;
+            fill: white;
+        }
+
+        /* =========================================
+           8. RESPONSIVE DESIGN (MOBILE)
+           ========================================= */
+        @media (max-width: 768px) {
+            header { flex-direction: column; padding: 20px; gap: 15px; }
+            .nav-links { gap: 20px; }
+            .slide h1 { font-size: 2.2rem; }
+            .product-card { flex-direction: column; }
+            .product-image { width: 100%; height: 250px; }
+            .product-info { width: 100%; padding: 25px; }
+            .btn-buy { width: 100%; }
+            .trust-grid { grid-template-columns: 1fr; gap: 20px; }
+        }
+
+        /* =========================================
+   ESTILOS DEL MENÚ DESPLEGABLE DEL CARRITO
+   ========================================= */
+.cart-dropdown {
+    display: none; /* Oculto por defecto */
+    position: absolute;
+    top: 40px;
+    right: -10px;
+    width: 300px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    z-index: 1000;
+    padding: 15px;
+    font-family: 'Glacial Indifference', sans-serif;
+    border-top: 4px solid #E27C31;
+    cursor: default;
+}
+.cart-dropdown.active { 
+    display: block; /* Se muestra cuando JS le añade esta clase */
+}
+.cart-dropdown-empty {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 10px 0;
+}
+.cart-dropdown-item { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 10px; 
+    padding-bottom: 10px; 
+    border-bottom: 1px solid #eaeaea; 
+    font-size: 0.9rem; 
+}
+.cart-dropdown-item-info { flex: 1; padding-right: 10px; }
+.cart-dropdown-item-title { font-weight: bold; color: #2E4365; margin-bottom: 3px; }
+.cart-dropdown-item-price { color: #E27C31; font-weight: bold; }
+.cart-dropdown-footer { margin-top: 15px; }
+.cart-dropdown-total { 
+    font-family: 'Poppins', sans-serif; 
+    font-weight: bold; 
+    color: #2E4365; 
+    margin-bottom: 10px; 
+    text-align: right; 
+    font-size: 1.1rem;
+}
+.btn-checkout { 
+    display: block; 
+    width: 100%; 
+    text-align: center; 
+    background-color: #E27C31; 
+    color: white; 
+    text-decoration: none; 
+    padding: 10px; 
+    border-radius: 6px; 
+    font-family: 'Poppins', sans-serif; 
+    font-weight: 700; 
+    transition: background 0.3s; 
+    text-transform: uppercase;
+}
+.btn-checkout:hover { background-color: #c96b28; }
+
+.top-bar {
+    background-color: #E27C31; /* Naranja TechStop */
+    color: #FFFFFF;
+    text-align: center;
+    padding: 10px 15px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+    </style>
+</head>
+<body id="home">
+
+        <div class="top-bar">
+            <p>🚀 <strong>ENVÍO GRATIS A COLOMBIA</strong> por compras superiores a $250.000 COP</p>
+        </div>
+    <!-- NAVIGATION -->
+    <header>
+        <div class="logo">
+            <a href="index.html">
+            <img src="TECH STOP LOGO.png" alt="Tech Stop Logo">
+            </a>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <!-- DROPDOWN MENU -->
+                <li class="dropdown">
+                    <a href="javascript:void(0)">Productos ▾</a>
+                    <div class="dropdown-content">
+                        <a href="product-y20.html">Y20 Headset</a>
+                        <a href="product-dashcam.html">Dashcam 1080p</a>
+                        <a href="product-led.html">Panel LED Flexible</a>
+                    </div>
+                </li>
+                <li><a href="#contact">Contacto</a></li>
+                <li class="cart-container" style="position: relative; display: inline-block;">
+    
+    <!-- Ícono clickeable -->
+    <a onclick="toggleCartDropdown()" style="cursor: pointer; position: relative;" aria-label="Ver carrito">
+        <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: #2E4365; transition: transform 0.2s;">
+            <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+        </svg>
+        <!-- Globito rojo con el número -->
+        <span id="cart-count" style="position: absolute; top: -8px; right: -10px; background: #E27C31; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem; font-weight: bold; display: none;">0</span>
+    </a>
+    
+    <!-- Menú Desplegable (Dropdown) -->
+    <div id="cart-dropdown" class="cart-dropdown">
+        <div id="cart-dropdown-items">
+            <!-- Aquí JavaScript inyectará los productos -->
+        </div>
+        <div class="cart-dropdown-footer">
+            <div class="cart-dropdown-total">Total: <span id="cart-dropdown-total-price">$0</span></div>
+            <a href="checkout.html" class="btn-checkout">Ir a Pagar</a>
+        </div>
+    </div>
+</li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- TALL BANNER SLIDER -->
+    <div class="slider-container">
+        <div class="slide active" style="background-image: url('y20-max.jpeg'); background-color: #28628B;">
+            <div class="slide-content">
+                <h1>Intercomunicador Y20 Max</h1>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('dashcam.jpg'); background-color: #2E4365;">
+            <div class="slide-content">
+                <h1>Dashcam 1080p</h1>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('led-panel.jpeg'); background-color: #E27C31;">
+            <div class="slide-content">
+                <h1>Panel LED Flexible</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCTS SECTION -->
+    <section id="products">
+        <h2 class="section-title">NUESTROS PRODUCTOS</h2>
+        
+        <a href="product-y20.html" class="product-card">
+            <div class="product-image">
+                <img src="y20-max.jpeg" alt="Intercomunicador Y20 Max">
+            </div>
+            <div class="product-info">
+                <h2>Intercomunicador Y20 Max</h2>
+                <p>Ideal para cascos de moto, cuenta con fácil instalación, reproduce música y te permite comunicarte con el pasajero.</p>
+                <div class="price">$89.900 COP</div>
+                <div class="btn-buy">Ver Detalles</div>
+            </div>
+        </a>
+
+        <a href="product.html" class="product-card">
+            <div class="product-image">
+                <img src="dashcam.jpg" alt="Dashcam Universal 1080p">
+            </div>
+            <div class="product-info">
+                <h2>Dashcam Universal 1080p</h2>
+                <p>Graba video calidad 1080p e incluye adaptador de corriente para el encendedor con interfaz Type-C. Cuenta con múltiples lentes para cobertura completa del vehículo.</p>
+                <div class="price">$129.900 COP</div>
+                <div class="btn-buy">Ver Detalles</div>
+            </div>
+        </a>
+
+        <a href="product.html" class="product-card">
+            <div class="product-image">
+                <img src="led-panel.jpeg" alt="Panel LED Flexible">
+            </div>
+            <div class="product-info">
+                <h2>Panel LED Flexible</h2>
+                <p>Pantalla LED programable para ventanas de autos o camiones, conocida como Devil Eyes, e incluye control remoto.</p>
+                <div class="price">$149.900 COP</div>
+                <div class="btn-buy">Ver Detalles</div>
+            </div>
+        </a>
+    </section>
+
+    <!-- VALUE PROPOSITION / TRUST SECTION -->
+    <section class="trust-section">
+        <div class="trust-grid">
+            <div class="trust-item">
+                <div class="trust-icon">🔒</div>
+                <h3>Compra 100% Segura</h3>
+                <p>Múltiples métodos de pago habilitados. Somos una tienda virtual basada en Bogotá, Colombia.</p>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">🚚</div>
+                <h3>Envíos Rápidos</h3>
+                <p>Envíos a nivel nacional e internacional en máximo 3 días hábiles.</p>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">💬</div>
+                <h3>Atención al Cliente</h3>
+                <p>Estamos para ayudarte. Contáctanos por WhatsApp para resolver cualquier duda sobre tus gadgets.</p>
+            </div>
+        </div>
+    </section>
+
+  
+
+    <!-- FLOATING WHATSAPP BUTTON WITH MASCOT -->
+    <div class="floating-wa-container">
+        <img src="chat-robot.png" alt="Asistente Virtual" class="mascot-helper">
+        <a href="https://wa.me/573000000000?text=¡Hola!%20Me%20interesa%20un%20producto%20de%20TechStop." class="btn-whatsapp" target="_blank" aria-label="Chat on WhatsApp">
+            <svg viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+        </a>
+    </div>
+
+    <!-- SLIDER SCRIPT -->
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        function nextSlide() {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        setInterval(nextSlide, 4000);
+    </script>
+
+    <!-- =========================================
+         SECCIÓN DE CONTACTO
+         ========================================= -->
+    <section id="contact" style="background-color: #ffffff; padding: 60px 20px; text-align: center; border-top: 1px solid #eaeaea;">
+        <div style="max-width: 800px; margin: 0 auto;">
+            <img src="pensando-robot.png" alt="Robot de Soporte" style="width: 120px; height: 120px; object-fit: cover; object-position: 50% 100%; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <h2 style="color: #2E4365; font-size: 2.2rem; margin-bottom: 20px;">¿Tienes alguna duda? ¡Hablemos!</h2>
+            <p style="color: #555; font-size: 1.1rem; margin-bottom: 30px; font-family: 'Glacial Indifference', sans-serif;">
+                Estamos aquí para ayudarte a elegir el mejor gadget para ti. Escríbenos y te responderemos a la velocidad de la luz.
+            </p>
+            
+            <div style="display: flex; justify-content: center; align-items: center; gap: 30px; flex-wrap: wrap; margin-bottom: 40px;">
+                            
+                <!-- Datos de Contacto -->
+                <div style="text-align: left; font-family: 'Glacial Indifference', sans-serif;">
+                    <p style="margin-bottom: 10px;"><strong>📍 Ubicación:</strong> Bogotá, Colombia</p>
+                    <p style="margin-bottom: 10px;"><strong>✉️ Email:</strong> hola@techstop.com.co</p>
+                    <p style="margin-bottom: 10px;"><strong>📦 Envíos:</strong> Nacionales e internacionales en máx. 3 días hábiles</p>
+                </div>
+            </div>
+
+            <!-- Botón de WhatsApp -->
+            <a href="https://wa.me/573114552119" target="_blank" style="display: inline-block; background-color: #25D366; color: white; padding: 15px 35px; border-radius: 30px; font-family: 'Poppins', sans-serif; font-weight: 700; text-decoration: none; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); transition: transform 0.3s ease;">
+                💬 Chatear por WhatsApp
+            </a>
+        </div>
+    </section>
+
+         <!-- FOOTER -->
+    <footer id="contact">
+        <p>&copy; 2026 TechStop Colombia, Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="cart.js"></script>
+
+</body>
+</html>

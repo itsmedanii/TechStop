@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashcam 1080p | TechStop</title>
+    <style>
+        /* =========================================
+           1. RESET & LOCAL FONTS (Igual al Y20)
+           ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+        @font-face { font-family: 'Glacial Indifference'; src: url('GlacialIndifference-Regular.otf') format('opentype'); font-weight: normal; font-style: normal; }
+        @font-face { font-family: 'Poppins'; font-style: normal; font-weight: 400; src: local('Poppins Regular'), url('Poppins-Regular.woff') format('woff'); }
+        @font-face { font-family: 'Poppins'; font-style: normal; font-weight: 700; src: local('Poppins Bold'), url('Poppins-Bold.woff') format('woff'); }
+
+        body {
+            font-family: 'Glacial Indifference', Arial, sans-serif; 
+            background-color: #f4f6f8;
+            color: #333;
+            line-height: 1.6;
+            background-image: radial-gradient(#e0e5ec 1px, transparent 1px);
+            background-size: 20px 20px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, .price, .btn-buy, .nav-links a { font-family: 'Poppins', sans-serif; font-style: normal; }
+
+        /* =========================================
+           2. NAVIGATION BAR & DROPDOWN
+           ========================================= */
+        header {
+            background-color: #ffffff; padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+        }
+
+        .logo img { height: 70px; display: block; }
+
+        .nav-links { list-style: none; display: flex; gap: 40px; align-items: center; }
+        .nav-links li { position: relative; }
+        .nav-links a { color: #2E4365; text-decoration: none; font-weight: 700; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s ease; }
+        .nav-links a:hover { color: #E27C31; }
+
+        /* Dropdown CSS */
+        .dropdown-content {
+            display: none; position: absolute; top: 100%; left: 0; background-color: #ffffff; min-width: 220px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; z-index: 1001;
+        }
+        .dropdown-content a {
+            color: #333; padding: 12px 16px; text-decoration: none; display: block; text-transform: none; font-weight: 400; font-family: 'Glacial Indifference', sans-serif; border-bottom: 1px solid #f4f6f8;
+        }
+        .dropdown-content a:hover { background-color: #f8fafd; color: #E27C31; padding-left: 20px; transition: all 0.3s ease; }
+        .dropdown:hover .dropdown-content { display: block; }
+
+        .cart-icon svg { width: 24px; height: 24px; fill: #2E4365; transition: fill 0.3s ease; }
+        .cart-icon:hover svg { fill: #E27C31; }
+
+        /* =========================================
+           3. PRODUCT LAYOUT & GALLERY
+           ========================================= */
+        .product-page-wrapper { max-width: 1100px; margin: 50px auto; padding: 0 20px; flex-grow: 1; }
+        .product-top-section { display: flex; gap: 50px; background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); margin-bottom: 40px; }
+        
+        .product-gallery { width: 45%; display: flex; flex-direction: column; gap: 15px; position: relative; }
+        
+        /* Etiqueta de Oferta para la Dashcam */
+        .badge-offer { position: absolute; top: 15px; left: 15px; background-color: #2E4365; color: white; padding: 5px 12px; border-radius: 20px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; z-index: 10; box-shadow: 0 4px 10px rgba(46, 67, 101, 0.4); }
+
+        .main-image-container { width: 100%; height: 420px; background-color: #f8fafd; border: 2px solid #f0f4f8; border-radius: 12px; display: flex; align-items: center; justify-content: center; overflow: hidden; transition: transform 0.3s ease; }
+        .main-image-container:hover { transform: scale(1.02); }
+        .main-image-container img { max-width: 90%; max-height: 90%; object-fit: contain; }
+
+        .thumbnail-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        .thumbnail { width: 65px; height: 65px; border: 2px solid #f0f4f8; border-radius: 8px; cursor: pointer; object-fit: cover; transition: all 0.3s ease; opacity: 0.7; }
+        .thumbnail:hover, .thumbnail.active { border-color: #28628B; opacity: 1; transform: translateY(-2px); }
+
+        /* =========================================
+           4. BUY BOX & PRICING STRATEGY
+           ========================================= */
+        .product-buy-box { width: 55%; display: flex; flex-direction: column; justify-content: center; }
+        .product-buy-box h1 { font-size: 2.2rem; color: #2E4365; margin-bottom: 10px; line-height: 1.2; }
+        .short-desc { font-size: 1.1rem; color: #555; margin-bottom: 20px; }
+
+        /* Contenedor de Precio Ancla */
+        .pricing-container {
+            display: flex;
+            align-items: baseline;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .original-price {
+            font-size: 1.3rem;
+            color: #999;
+            text-decoration: line-through;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+        }
+
+        .current-price {
+            font-size: 2rem;
+            color: #E27C31;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Banner de Gatillo de Escasez */
+        .scarcity-trigger {
+            display: flex;
+            align-items: center;
+            background-color: #fff4ed;
+            border-left: 4px solid #E27C31;
+            padding: 12px 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .robot-scarcity {
+            width: 45px;
+            height: 45px;
+            object-fit: cover;
+            /* Recortamos para mostrar el robot pensativo de abajo a la izquierda */
+            object-position: 0% 100%; 
+            border-radius: 50%;
+            background-color: white;
+            padding: 2px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .scarcity-trigger p {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #d35400;
+        }
+        
+        .scarcity-trigger strong { font-weight: bold; }
+
+        /* Action Buttons */
+        .action-buttons { display: flex; gap: 20px; }
+        .btn { padding: 16px 25px; font-weight: 700; border-radius: 10px; cursor: pointer; text-transform: uppercase; text-align: center; flex: 1; border: none; transition: all 0.3s ease; font-family: 'Poppins', sans-serif; letter-spacing: 0.5px; }
+        .btn-add { background-color: #f0f4f8; color: #2E4365; border: 2px solid #2E4365; }
+        .btn-add:hover { background-color: #2E4365; color: white; }
+        .btn-buy { background-color: #E27C31; color: white; text-decoration: none; box-shadow: 0 6px 15px rgba(226, 124, 49, 0.3); }
+        .btn-buy:hover { background-color: #c96b28; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(226, 124, 49, 0.4); }
+       
+        /* =========================================
+           5. PRODUCT SPECIFICATIONS SECTION
+           ========================================= */
+        .product-bottom-section { background: #ffffff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.06); margin-bottom: 40px; }
+        .product-bottom-section h2 { color: #2E4365; margin-bottom: 25px; font-size: 1.6rem; border-bottom: 3px solid #28628B; padding-bottom: 10px; display: inline-block; }
+        
+        .specs-list { list-style: none; padding: 0; }
+        .specs-list li { margin-bottom: 15px; color: #555; font-size: 1.05rem; padding-left: 25px; position: relative; border-bottom: 1px solid #f4f6f8; padding-bottom: 10px; }
+        .specs-list li::before { content: '✓'; color: #28628B; font-weight: bold; font-size: 1.2rem; position: absolute; left: 0; top: -2px; }
+        .specs-list strong { color: #2E4365; display: inline-block; width: 200px; }
+
+        /* =========================================
+           6. MOBILE RESPONSIVENESS
+           ========================================= */
+        @media (max-width: 768px) {
+            header { flex-direction: column; padding: 20px; gap: 15px; }
+            .nav-links { gap: 20px; flex-wrap: wrap; justify-content: center; }
+            .product-top-section { flex-direction: column; padding: 25px; }
+            .product-gallery, .product-buy-box { width: 100%; }
+            .action-buttons { flex-direction: column; }
+            .specs-list strong { width: 100%; display: block; margin-bottom: 5px; }
+        }
+
+        /* =========================================
+           7. FLOATING WHATSAPP BUTTON & MASCOT
+           ========================================= */
+        .floating-wa-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .mascot-helper {
+            width: 80px;
+            margin-bottom: -15px;
+            z-index: 1001;
+            pointer-events: none;
+            animation: gentleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes gentleFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            z-index: 1000;
+        }
+
+        .btn-whatsapp:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-whatsapp svg {
+            width: 35px;
+            height: 35px;
+            fill: white;
+        }
+
+             /* =========================================
+   ESTILOS DEL MENÚ DESPLEGABLE DEL CARRITO
+   ========================================= */
+.cart-dropdown {
+    display: none; /* Oculto por defecto */
+    position: absolute;
+    top: 40px;
+    right: -10px;
+    width: 300px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    z-index: 1000;
+    padding: 15px;
+    font-family: 'Glacial Indifference', sans-serif;
+    border-top: 4px solid #E27C31;
+    cursor: default;
+}
+.cart-dropdown.active { 
+    display: block; /* Se muestra cuando JS le añade esta clase */
+}
+.cart-dropdown-empty {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 10px 0;
+}
+.cart-dropdown-item { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 10px; 
+    padding-bottom: 10px; 
+    border-bottom: 1px solid #eaeaea; 
+    font-size: 0.9rem; 
+}
+.cart-dropdown-item-info { flex: 1; padding-right: 10px; }
+.cart-dropdown-item-title { font-weight: bold; color: #2E4365; margin-bottom: 3px; }
+.cart-dropdown-item-price { color: #E27C31; font-weight: bold; }
+.cart-dropdown-footer { margin-top: 15px; }
+.cart-dropdown-total { 
+    font-family: 'Poppins', sans-serif; 
+    font-weight: bold; 
+    color: #2E4365; 
+    margin-bottom: 10px; 
+    text-align: right; 
+    font-size: 1.1rem;
+}
+.btn-checkout { 
+    display: block; 
+    width: 100%; 
+    text-align: center; 
+    background-color: #E27C31; 
+    color: white; 
+    text-decoration: none; 
+    padding: 10px; 
+    border-radius: 6px; 
+    font-family: 'Poppins', sans-serif; 
+    font-weight: 700; 
+    transition: background 0.3s; 
+    text-transform: uppercase;
+}
+.btn-checkout:hover { background-color: #c96b28; }
+
+  .top-bar {
+    background-color: #E27C31; /* Naranja TechStop */
+    color: #FFFFFF;
+    text-align: center;
+    padding: 10px 15px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+    </style>
+</head>
+<body id="home">
+
+        <div class="top-bar">
+            <p>🚀 <strong>ENVÍO GRATIS A COLOMBIA</strong> por compras superiores a $250.000 COP</p>
+        </div>
+
+      <!-- NAVIGATION -->
+    <header>
+        <div class="logo">
+            <a href="index.html">
+            <img src="TECH STOP LOGO.png" alt="Tech Stop Logo">
+            </a>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <!-- DROPDOWN MENU -->
+                <li class="dropdown">
+                    <a href="javascript:void(0)">Productos ▾</a>
+                    <div class="dropdown-content">
+                        <a href="product-y20.html">Y20 Headset</a>
+                        <a href="product-dashcam.html">Dashcam 1080p</a>
+                        <a href="product-led.html">Panel LED Flexible</a>
+                    </div>
+                </li>
+                <li><a href="index.html#contact">Contacto</a></li>
+                <li class="cart-container" style="position: relative; display: inline-block;">
+    
+    <!-- Ícono clickeable -->
+    <a onclick="toggleCartDropdown()" style="cursor: pointer; position: relative;" aria-label="Ver carrito">
+        <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: #2E4365; transition: transform 0.2s;">
+            <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/>
+        </svg>
+        <!-- Globito rojo con el número -->
+        <span id="cart-count" style="position: absolute; top: -8px; right: -10px; background: #E27C31; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem; font-weight: bold; display: none;">0</span>
+    </a>
+    
+    <!-- Menú Desplegable (Dropdown) -->
+    <div id="cart-dropdown" class="cart-dropdown">
+        <div id="cart-dropdown-items">
+            <!-- Aquí JavaScript inyectará los productos -->
+        </div>
+        <div class="cart-dropdown-footer">
+            <div class="cart-dropdown-total">Total: <span id="cart-dropdown-total-price">$0</span></div>
+            <a href="checkout.html" class="btn-checkout">Ir a Pagar</a>
+        </div>
+    </div>
+</li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="product-page-wrapper">
+        
+        <!-- TOP SECTION: Gallery & Buy Box -->
+        <div class="product-top-section">
+            
+            <div class="product-gallery">
+                <div class="badge-offer">Oferta de Lanzamiento</div>
+                <div class="main-image-container">
+                    <img id="main-product-image" src="dashcam.jpg" alt="Dashcam 1080p Main">
+                </div>
+                <div class="thumbnail-row">
+                    <img class="thumbnail active" src="dashcam.jpg" onclick="changeImage(this, 'dashcam-1.jpg')" alt="Vista 1">
+                    <img class="thumbnail" src="dashcam-2.jpg" onclick="changeImage(this, 'dashcam-2.jpg')" alt="Vista 2">
+                    <img class="thumbnail" src="dashcam-3.jpg" onclick="changeImage(this, 'dashcam-3.jpg')" alt="Vista 3">
+                    <img class="thumbnail" src="dashcam-4.jpg" onclick="changeImage(this, 'dashcam-4.jpg')" alt="Vista 4">
+                </div>
+            </div>
+
+            <!-- Buy Box con Precio Ancla y Escasez -->
+            <div class="product-buy-box">
+                <h1>Dashcam Universal 1080p</h1>
+                
+                <div class="short-desc">
+                    Protege tu camino. Sistema de cámara universal para autos que graba video calidad 1080p. Incluye múltiples lentes para una cobertura integral del vehículo[cite: 2].
+                </div>
+
+                <!-- PRECIO ANCLA -->
+                <div class="pricing-container">
+                    <span class="original-price">$190.000 COP</span>
+                    <span class="current-price">$129.900 COP</span>
+                </div>
+
+                <!-- GATILLO DE ESCASEZ -->
+                <div class="scarcity-trigger">
+                    <img src="surprised-robot.png" class="robot-scarcity" alt="Robot Pensativo">
+                    <p>🔥 <strong>¡Alta demanda!</strong> Quedan muy pocas unidades disponibles a este precio.</p>
+                </div>
+
+               <!-- BOTONES DASHCAM -->
+                <div class="action-buttons">
+                    <button type="button" class="btn btn-add" onclick="addToCart('Dashcam Universal 1080p', 129900)">Añadir al Carrito</button>
+                    <button type="button" class="btn btn-buy" onclick="buyNowIndividual('Dashcam Universal 1080p', 129900)">Comprar Ahora</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM SECTION: Deep Details & Specs -->
+        <div class="product-bottom-section">
+            <h2>Especificaciones Técnicas</h2>
+            <ul class="specs-list">
+                <li><strong>Resolución:</strong> Graba video calidad 1080p para imágenes nítidas[cite: 2].</li>
+                <li><strong>Cobertura:</strong> Cuenta con múltiples lentes para una cobertura integral del vehículo[cite: 2].</li>
+                <li><strong>Alimentación:</strong> Incluye adaptador de corriente para el encendedor de cigarrillos con interfaz tipo C[cite: 2].</li>
+                <li><strong>Compatibilidad:</strong> Diseño universal, compatible con cualquier tipo de auto[cite: 2].</li>
+                <li><strong>Almacenamiento:</strong> (Agrega aquí la capacidad máxima de memoria MicroSD soportada).</li>
+            </ul>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer style="background-color: #1a2538; color: #8892a3; text-align: center; padding: 40px 20px; font-size: 1rem; margin-top: auto;">
+        <p>&copy; 2026 TechStop Colombia, Todos los derechos reservados.</p>
+    </footer>
+
+     <!-- FLOATING WHATSAPP BUTTON WITH MASCOT -->
+    <div class="floating-wa-container">
+        <img src="chat-robot.png" alt="Asistente Virtual" class="mascot-helper">
+        <a href="https://wa.me/573114552119?text=¡Hola!%20Me%20interesa%20un%20producto%20de%20TechStop." class="btn-whatsapp" target="_blank" aria-label="Chat on WhatsApp">
+            <svg viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+        </a>
+    </div>
+
+    <script>
+        function changeImage(element, imageSrc) {
+            document.getElementById('main-product-image').src = imageSrc;
+            let thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach(thumb => thumb.classList.remove('active'));
+            element.classList.add('active');
+        }
+    </script>
+
+    <script src="cart.js"></script>
+    <script>
+    /* =========================================
+       MOTOR ÚNICO DEL CARRITO (Con Memoria)
+       ========================================= */
+
+    // 1. Cargar del localStorage en TODAS las páginas
+    let cart = JSON.parse(localStorage.getItem('techStopCart')) || [];
+
+    function saveAndRender() {
+        localStorage.setItem('techStopCart', JSON.stringify(cart));
+        updateCartUI();
+    }
+
+    function addToCart(productName, productPrice) {
+        cart.push({ name: productName, price: productPrice });
+        saveAndRender();
+        alert("¡" + productName + " se ha añadido a tu carrito!");
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        saveAndRender();
+    }
+
+    function updateCartUI() {
+        let cartTotal = cart.reduce((total, item) => total + item.price, 0);
+        
+        const cartCount = document.getElementById('cart-count');
+        const cartDropdownItems = document.getElementById('cart-dropdown-items');
+        const cartTotalPrice = document.getElementById('cart-dropdown-total-price');
+
+        if(cartCount) {
+            cartCount.innerText = cart.length;
+            cartCount.style.display = cart.length > 0 ? 'inline-block' : 'none';
+        }
+
+        if(cartTotalPrice) {
+            cartTotalPrice.innerText = "$" + cartTotal.toLocaleString('es-CO');
+        }
+
+        if(cartDropdownItems) {
+            cartDropdownItems.innerHTML = ''; 
+            if (cart.length === 0) {
+                cartDropdownItems.innerHTML = '<div style="text-align:center; padding:10px; color:#2E4365;">Tu carrito está vacío</div>';
+            } else {
+                cart.forEach((item, index) => {
+                    cartDropdownItems.innerHTML += `
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; padding: 8px 0;">
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="color:#2E4365; font-weight:bold; font-size: 0.9rem;">${item.name}</span>
+                                <span style="color:#E27C31; font-weight:bold; font-size: 0.85rem;">$${item.price.toLocaleString('es-CO')}</span>
+                            </div>
+                            <button onclick="removeFromCart(${index})" style="background: none; border: none; color: #d9534f; font-size: 1.3rem; cursor: pointer;" title="Eliminar">&times;</button>
+                        </div>
+                    `;
+                });
+            }
+        }
+    }
+
+    // Se ejecuta apenas carga la página para leer la memoria inmediatamente
+    document.addEventListener('DOMContentLoaded', updateCartUI);
+</script>
+   
+</body>
+</html>

@@ -1,0 +1,51 @@
+/* =========================================
+           8. FLOATING WHATSAPP BUTTON & MASCOT
+           ========================================= */
+        .floating-wa-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .mascot-helper {
+            width: 80px; /* Adjust size as needed */
+            margin-bottom: -15px; /* Pulls the mascot down so it overlaps the button */
+            z-index: 1001;
+            pointer-events: none; /* Prevents the mascot from blocking clicks on the button */
+            animation: gentleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes gentleFloat {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366; /* Official WhatsApp Green */
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            z-index: 1000;
+        }
+
+        .btn-whatsapp:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .btn-whatsapp svg {
+            width: 35px;
+            height: 35px;
+            fill: white;
+        }

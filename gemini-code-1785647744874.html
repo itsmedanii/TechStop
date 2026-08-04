@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intercomunicador Y20 Max | TechStop</title>
+    <style>
+        /* =========================================
+           FUENTES Y RESET
+           ========================================= */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Glacial Indifference', Arial, sans-serif; background-color: #f4f6f8; color: #333; }
+        h1, h2, h3 { font-family: 'Poppins', sans-serif; color: #2E4365; }
+
+        /* =========================================
+           NAVEGACIÓN Y CARRITO (Hover)
+           ========================================= */
+        header { background-color: #ffffff; padding: 15px 50px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 15px rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; }
+        .logo img { height: 45px; display: block; }
+        .nav-links { list-style: none; display: flex; gap: 20px; align-items: center; font-family: 'Poppins', sans-serif; font-weight: 700; }
+        .nav-links a { text-decoration: none; color: #2E4365; }
+        
+        .cart-container { position: relative; display: inline-block; margin-left: 20px; }
+        .cart-icon-link { position: relative; display: flex; align-items: center; text-decoration: none; padding: 10px 0; }
+        #cart-count { position: absolute; top: -2px; right: -10px; background: #E27C31; color: white; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem; font-weight: bold; display: none; }
+        
+        .cart-dropdown { visibility: hidden; opacity: 0; position: absolute; top: 100%; right: 0; width: 300px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); z-index: 1000; padding: 15px; border-top: 4px solid #E27C31; transform: translateY(10px); transition: all 0.3s ease; }
+        .cart-container:hover .cart-dropdown { visibility: visible; opacity: 1; transform: translateY(0); }
+        .cart-dropdown-footer { margin-top: 15px; }
+        .cart-dropdown-total { font-family: 'Poppins', sans-serif; font-weight: bold; color: #2E4365; margin-bottom: 10px; text-align: right; font-size: 1.1rem; }
+        .btn-checkout { display: block; width: 100%; text-align: center; background-color: #2E4365; color: white; text-decoration: none; padding: 10px; border-radius: 6px; font-family: 'Poppins', sans-serif; font-weight: 700; text-transform: uppercase; }
+        .btn-checkout:hover { background-color: #E27C31; }
+
+        /* =========================================
+           DISEÑO DE PÁGINA DE PRODUCTO
+           ========================================= */
+        .product-page { max-width: 1000px; margin: 50px auto; padding: 20px; display: flex; gap: 40px; background: white; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .product-gallery { flex: 1; background: #f8fafd; border-radius: 8px; display: flex; align-items: center; justify-content: center; min-height: 400px; border: 2px dashed #28628B; }
+        .product-details { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .product-title { font-size: 2.2rem; margin-bottom: 10px; }
+        .product-price { font-size: 1.8rem; color: #E27C31; font-family: 'Poppins', sans-serif; font-weight: 700; margin-bottom: 20px; }
+        .product-description { font-size: 1.1rem; color: #555; line-height: 1.6; margin-bottom: 30px; }
+        
+        .btn-add-huge { background-color: #E27C31; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-family: 'Poppins', sans-serif; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: background 0.3s; text-transform: uppercase; width: 100%; box-shadow: 0 4px 15px rgba(226, 124, 49, 0.4); }
+        .btn-add-huge:hover { background-color: #c96b28; transform: translateY(-2px); }
+        
+        .shipping-info { margin-top: 20px; padding: 15px; background: #e6f0fa; border-left: 4px solid #28628B; border-radius: 0 8px 8px 0; font-size: 0.95rem; color: #2E4365; }
+    </style>
+</head>
+<body>
+
+    <!-- NAVEGACIÓN -->
+    <header>
+        <div class="logo">
+            <a href="index.html"><img src="TECH STOP LOGO.jpg" alt="Tech Stop Logo"></a>
+        </div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="index.html#products">Productos</a></li>
+                <li class="cart-container">
+                    <a href="checkout.html" class="cart-icon-link" aria-label="Ver carrito">
+                        <svg viewBox="0 0 24 24" style="width: 24px; height: 24px; fill: #2E4365;"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                        <span id="cart-count">0</span>
+                    </a>
+                    <div class="cart-dropdown">
+                        <div id="cart-dropdown-items"></div>
+                        <div class="cart-dropdown-footer">
+                            <div class="cart-dropdown-total">Total: <span id="cart-dropdown-total-price">$0</span></div>
+                            <a href="checkout.html" class="btn-checkout">IR A PAGAR</a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- DETALLES DEL PRODUCTO -->
+    <main class="product-page">
+        <div class="product-gallery">
+            <p style="color: #28628B; font-family: 'Poppins';">Foto Y20 Max Aquí</p>
+        </div>
+        <div class="product-details">
+            <h1 class="product-title">Intercomunicador Y20 Max</h1>
+            <div class="product-price">$85.000 COP</div>
+            
+            <p class="product-description">
+                Ideal para cascos de moto, con una fácil instalación. Este sistema reproduce música y te permite comunicarte con el pasajero de forma clara y segura[cite: 1].
+            </p>
+
+            <!-- BOTÓN CONECTADO AL JS -->
+            <button class="btn-add-huge" onclick="addToCart('Intercomunicador Y20 Max', 85000)">Añadir al Carrito</button>
+
+            <div class="shipping-info">
+                <strong>📦 Envío Rápido:</strong> Envíos a nivel nacional e internacional en máximo 3 días hábiles (costo cubierto por el comprador)[cite: 1].
+            </div>
+        </div>
+    </main>
+
+    <!-- SCRIPT DEL CARRITO (Con localStorage) -->
+    <script>
+        let cart = JSON.parse(localStorage.getItem('techStopCart')) || [];
+        let cartTotal = cart.reduce((total, item) => total + item.price, 0);
+
+        function addToCart(productName, productPrice) {
+            cart.push({ name: productName, price: productPrice });
+            cartTotal += productPrice;
+            localStorage.setItem('techStopCart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartCount = document.getElementById('cart-count');
+            const cartDropdownItems = document.getElementById('cart-dropdown-items');
+            const cartTotalPrice = document.getElementById('cart-dropdown-total-price');
+
+            if(cartCount) {
+                cartCount.innerText = cart.length;
+                cartCount.style.display = cart.length > 0 ? 'inline-block' : 'none';
+            }
+
+            if(cartTotalPrice) {
+                cartTotalPrice.innerText = "$" + cartTotal.toLocaleString('es-CO');
+            }
+
+            if(cartDropdownItems) {
+                cartDropdownItems.innerHTML = ''; 
+                if (cart.length === 0) {
+                    cartDropdownItems.innerHTML = '<div style="text-align:center; padding:10px; color:#2E4365;">Tu carrito está vacío</div>';
+                } else {
+                    cart.forEach(item => {
+                        cartDropdownItems.innerHTML += `
+                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 5px 0; margin-bottom: 5px;">
+                                <span style="color:#2E4365; font-weight:bold;">${item.name}</span>
+                                <span style="color:#E27C31; font-weight:bold;">$${item.price.toLocaleString('es-CO')}</span>
+                            </div>
+                        `;
+                    });
+                }
+            }
+        }
+        document.addEventListener('DOMContentLoaded', updateCartUI);
+    </script>
+</body>
+</html>
